@@ -12,7 +12,7 @@ import {
 
 export const config = getDefaultConfig({
    appName: "Agent 9000",
-   projectId: "YOUR_PROJECT_ID",
+   projectId: "1234567890",
    chains: [
       mainnet,
       polygon,
