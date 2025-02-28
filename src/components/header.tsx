@@ -1,117 +1,151 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Search, Menu, MoreHorizontal } from "lucide-react"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Search, Menu } from "lucide-react";
+import { WalletConnect } from "@/lib/wallet-connect";
 
 export function Header({
-  activeView,
-  setActiveView,
+   activeView,
+   setActiveView,
 }: {
-  activeView: "boomer" | "zoomer"
-  setActiveView: (view: "boomer" | "zoomer") => void
+   activeView: "boomer" | "zoomer";
+   setActiveView: (view: "boomer" | "zoomer") => void;
 }) {
-  const [isConnected, setIsConnected] = useState(false)
-  const [walletAddress, setWalletAddress] = useState("")
+   const [isConnected, setIsConnected] = useState(false);
+   const [walletAddress, setWalletAddress] = useState("");
 
-  // Mock function to simulate wallet connection
-  const connectWallet = async () => {
-    // In a real implementation, this would use WalletConnect or similar
-    setIsConnected(true)
-    setWalletAddress("0x1234...5678")
-  }
+   useEffect(() => {
+      // Initialize WalletConnect
+      const walletConnect = WalletConnect.getInstance({
+         projectId: "YOUR_PROJECT_ID", // Replace with your actual project ID
+         chains: [1], // Ethereum mainnet
+         metadata: {
+            name: "Agent9K",
+            description: "Crypto swap interface",
+            url: window.location.origin,
+            icons: [`${window.location.origin}/icon.png`],
+         },
+      });
 
-  const disconnectWallet = () => {
-    setIsConnected(false)
-    setWalletAddress("")
-  }
+      // Check if already connected
+      if (walletConnect.getIsConnected()) {
+         setIsConnected(true);
+         setWalletAddress(walletConnect.getAddress());
+      }
+   }, []);
 
-  return (
-    <header className="border-b sticky top-0 z-50 w-full bg-white">
-      <div className="container flex h-16 items-center justify-between px-4">
-        <div className="flex items-center gap-6">
-          <Link href="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-full bg-pink-100 flex items-center justify-center">
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path
-                  d="M10 2C5.58172 2 2 5.58172 2 10C2 14.4183 5.58172 18 10 18C14.4183 18 18 14.4183 18 10C18 5.58172 14.4183 2 10 2Z"
-                  fill="#FF80BF"
-                />
-                <path
-                  d="M13.5 8.5C13.5 9.88071 12.3807 11 11 11C9.61929 11 8.5 9.88071 8.5 8.5C8.5 7.11929 9.61929 6 11 6C12.3807 6 13.5 7.11929 13.5 8.5Z"
-                  fill="white"
-                />
-                <path
-                  d="M7 12C7 13.1046 6.10457 14 5 14C3.89543 14 3 13.1046 3 12C3 10.8954 3.89543 10 5 10C6.10457 10 7 10.8954 7 12Z"
-                  fill="white"
-                />
-              </svg>
+   const connectWallet = async () => {
+      try {
+         const walletConnect = WalletConnect.getInstance({
+            projectId: "YOUR_PROJECT_ID",
+            chains: [1],
+            metadata: {
+               name: "Agent9K",
+               description: "Crypto swap interface",
+               url: window.location.origin,
+               icons: [`${window.location.origin}/icon.png`],
+            },
+         });
+
+         const { address } = await walletConnect.connect();
+         setIsConnected(true);
+         setWalletAddress(address);
+      } catch (error) {
+         console.error("Failed to connect wallet:", error);
+      }
+   };
+
+   const disconnectWallet = async () => {
+      try {
+         const walletConnect = WalletConnect.getInstance({
+            projectId: "YOUR_PROJECT_ID",
+            chains: [1],
+            metadata: {
+               name: "Agent9K",
+               description: "Crypto swap interface",
+               url: window.location.origin,
+               icons: [`${window.location.origin}/icon.png`],
+            },
+         });
+
+         await walletConnect.disconnect();
+         setIsConnected(false);
+         setWalletAddress("");
+      } catch (error) {
+         console.error("Failed to disconnect wallet:", error);
+      }
+   };
+
+   return (
+      <header className="border-border/50 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50 w-full">
+         <div className="container flex h-16 items-center justify-between px-4">
+            <div className="flex items-center gap-6">
+               <Link href="/" className="flex items-center gap-2">
+                  <div className="w-8 h-8 rounded border border-primary/50 bg-background flex items-center justify-center overflow-hidden">
+                     <span className="font-mono text-primary text-xs terminal-text">
+                        A9K
+                     </span>
+                  </div>
+                  <span className="text-xl font-mono text-primary">
+                     Agent9K
+                  </span>
+               </Link>
+
+               <nav className="hidden md:flex items-center gap-6">
+                  <button
+                     onClick={() => setActiveView("boomer")}
+                     className={`text-base font-mono ${
+                        activeView === "boomer"
+                           ? "text-secondary"
+                           : "text-muted-foreground hover:text-secondary/80"
+                     }`}
+                  >
+                     boomer
+                  </button>
+                  <button
+                     onClick={() => setActiveView("zoomer")}
+                     className={`text-base font-mono ${
+                        activeView === "zoomer"
+                           ? "text-secondary"
+                           : "text-muted-foreground hover:text-secondary/80"
+                     }`}
+                  >
+                     zoomer
+                  </button>
+               </nav>
             </div>
-            <span className="text-xl font-semibold text-pink-500">Agent 9000</span>
-          </Link>
 
-          <nav className="hidden md:flex items-center gap-6">
-            <button
-              onClick={() => setActiveView("boomer")}
-              className={`text-base font-medium ${
-                activeView === "boomer" ? "text-gray-900" : "text-gray-500 hover:text-gray-900"
-              }`}
-            >
-              Boomer
-            </button>
-            <button
-              onClick={() => setActiveView("zoomer")}
-              className={`text-base font-medium ${
-                activeView === "zoomer" ? "text-gray-900" : "text-gray-500 hover:text-gray-900"
-              }`}
-            >
-              Zoomer
-            </button>
-          </nav>
-        </div>
+            <div className="hidden md:flex items-center gap-4">
+               <div className="relative w-64">
+                  <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                  <Input
+                     type="search"
+                     placeholder="$ search tokens"
+                     className="w-full bg-muted/50 border-muted font-mono pl-9 text-sm"
+                  />
+               </div>
 
-        <div className="hidden md:flex items-center gap-4">
-          <div className="relative w-64">
-            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500" />
-            <Input
-              type="search"
-              placeholder="Search tokens"
-              className="w-full bg-gray-100 border-0 pl-9 rounded-full"
-            />
-          </div>
+               <Button
+                  onClick={isConnected ? disconnectWallet : connectWallet}
+                  variant={isConnected ? "outline" : "default"}
+                  className={`font-mono ${
+                     isConnected
+                        ? "border-primary/50 text-primary hover:bg-primary/10"
+                        : "bg-primary text-primary-foreground hover:bg-primary/90"
+                  }`}
+               >
+                  {isConnected ? `${walletAddress}` : "$ connect"}
+               </Button>
+            </div>
 
-          <Button
-            onClick={isConnected ? disconnectWallet : connectWallet}
-            variant={isConnected ? "outline" : "default"}
-            className={isConnected ? "text-gray-700" : "bg-pink-500 hover:bg-pink-600 text-white"}
-          >
-            {isConnected ? `${walletAddress}` : "Connect"}
-          </Button>
-
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon">
-                <MoreHorizontal className="h-5 w-5" />
-                <span className="sr-only">More</span>
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem>Settings</DropdownMenuItem>
-              <DropdownMenuItem>Help</DropdownMenuItem>
-              <DropdownMenuItem>About</DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
-
-        <Button variant="ghost" size="icon" className="md:hidden">
-          <Menu className="h-6 w-6" />
-          <span className="sr-only">Toggle menu</span>
-        </Button>
-      </div>
-    </header>
-  )
+            <Button variant="ghost" size="icon" className="md:hidden">
+               <Menu className="h-6 w-6" />
+               <span className="sr-only">Toggle menu</span>
+            </Button>
+         </div>
+      </header>
+   );
 }
-
