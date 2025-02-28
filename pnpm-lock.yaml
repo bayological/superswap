@@ -18,7 +18,7 @@ importers:
         specifier: ^2.2.4
         version: 2.2.4(@tanstack/react-query@5.66.11(react@19.0.0))(@types/react@19.0.10)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(viem@2.23.5(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10))(wagmi@2.14.12(@tanstack/query-core@5.66.11)(@tanstack/react-query@5.66.11(react@19.0.0))(@types/react@19.0.10)(bufferutil@4.0.9)(react@19.0.0)(typescript@5.8.2)(utf-8-validate@5.0.10)(viem@2.23.5(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)))
       '@tanstack/react-query':
-        specifier: ^5.66.11
+        specifier: ^5.55.3
         version: 5.66.11(react@19.0.0)
       class-variance-authority:
         specifier: ^0.7.1
